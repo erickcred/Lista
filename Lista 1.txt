@@ -1,10 +1,8 @@
 Nome Lista: Lista 1
-Data prevista compra: 11/12/2024 00:00:00
+Data prevista compra: 10/10/2023 00:00:00
 Produtos
 ----
-Produto 1, categória: Mercado, R$ 0,00, comprado: Não
-Produto 2, categória: Escritorio, R$ 0,00, comprado: Não
-Produto 3, categória: Manutencao, R$ 0,00, comprado: Não
-Arroz, categória: Mercado, R$ 0,00, comprado: Não
+produto 1, categória: Mercado, R$ 0,00, comprado: Não
+produto 2, categória: Mercado, R$ 0,00, comprado: Não
 ----
 

@@ -118,12 +118,16 @@ string MenuAdicionarProduto()
   return adicionarProduto;
 }
 
-void OperacaoAdicionarProduto()
+void OperacaoAdicionarProduto(string nomeListaDesejada = null)
 {
-  OperacaoObterListas();
-  Console.Write("Informe o nome da Lista: ");
+  if (nomeListaDesejada == null)
+  {
+    OperacaoObterListas();
+    Console.Write("Informe o nome da Lista: ");
+    nomeListaDesejada = Console.ReadLine();
+  }    
 
-  var nomeListaDesejada = Console.ReadLine();
+
   var listaEscolhida = ListaRepository.ObterTodos().FirstOrDefault(x => x.Nome.ToLower() == nomeListaDesejada.ToLower());
   
   if (listaEscolhida == null)
@@ -176,34 +180,104 @@ void OperacaoEditarProduto()
     Console.ForegroundColor = ConsoleColor.Red;
     Console.WriteLine("Lista selecionada não existe!");
     Console.ForegroundColor = ConsoleColor.White;
-    OperacaoAdicionarProduto();
+    OperacaoEditarProduto();
   }
 
-  Console.Write("Nome do produto: ");
-  string nomeProduto = Console.ReadLine();
-  Console.Write("Categoria do produto: (0 - Mercado, 1 - Escritório, 2 Manutenção): ");
-  string categoriaProduto = ValidaCategoriaProduto(Console.ReadLine());
-
-  var produto = new Produto(nomeProduto, Enum.Parse<ProdutoCategoria>(categoriaProduto));
-  listaEscolhida.AdicionarProduto(produto);
-
-  string adicionarProduto = MenuAdicionarProduto();
- 
-  while (adicionarProduto != "N")
+  MostrarProdutos(listaEscolhida);
+  if (listaEscolhida.Produtos.Count == 0)
   {
-    Console.Write("Nome do produto: ");
-    nomeProduto = Console.ReadLine();
-    Console.Write("Categoria do produto: (0 - Mercado, 1 - Escritório, 2 Manutenção): ");
-    categoriaProduto = ValidaCategoriaProduto(Console.ReadLine());
+    Console.ForegroundColor = ConsoleColor.Red;
+    Console.WriteLine($"Essa lista não tem produtos para editar");
+    Console.ForegroundColor = ConsoleColor.Yellow;
+    Console.WriteLine($"Adicionar produtos nessa lista? (S - Sim, N - Não):");
+    string opcao = Console.ReadLine().ToUpper();
 
-    produto = new Produto(nomeProduto, Enum.Parse<ProdutoCategoria>(categoriaProduto));
-    listaEscolhida.AdicionarProduto(produto);
-    
-    adicionarProduto = MenuAdicionarProduto();
+    while (opcao != "S" && opcao != "N")
+    {
+      Console.Clear();
+      Console.ForegroundColor = ConsoleColor.Red;
+      Console.WriteLine($"Essa lista não tem produtos para editar");
+      Console.ForegroundColor = ConsoleColor.Yellow;
+      Console.WriteLine($"Adicionar produtos nessa lista? (S - Sim, N - Não):");
+      opcao = Console.ReadLine().ToUpper();
+    }
+    Console.ForegroundColor = ConsoleColor.White;
+    if (opcao.StartsWith("S"))
+    {
+      OperacaoAdicionarProduto(listaEscolhida.Nome);
+    }
   }
-  OperacaoSalvarLista(listaEscolhida);
-  OperacaoInicial();
+  
+  Console.Write($"Qual produto deseja Editar: ");
+  var produtoParaEditar = Console.ReadLine().Trim().ToUpper();
+  var produto = listaEscolhida.Produtos.FirstOrDefault(x => x.Nome.Trim().ToUpper() == produtoParaEditar);
+  
 
+  while (produto == null)
+  {
+    Console.Clear();
+    Console.ForegroundColor = ConsoleColor.Red;
+    Console.WriteLine($"Produto não encontrado ou nome incorreto tente novamente!");
+    MostrarProdutos(listaEscolhida);
+    
+    Console.Write($"Qual produto deseja Editar: ");
+    produtoParaEditar = Console.ReadLine().Trim().ToUpper();
+    produto = listaEscolhida.Produtos.FirstOrDefault(x => x.Nome.Trim().ToUpper() == produtoParaEditar);
+  }
+
+  
+
+
+  Console.Write($"1 - Editar, 2 - Deletar: ");
+  int tipoDeProcesso = int.Parse(Console.ReadLine());
+  while (tipoDeProcesso != 1 && tipoDeProcesso != 2)
+  {
+    Console.Clear();
+    Console.ForegroundColor = ConsoleColor.Red;
+    Console.WriteLine($"Opção invalida!");
+    Console.ForegroundColor = ConsoleColor.White;
+    Console.Write($"1 - Editar, 2 - Deletar: ");
+    tipoDeProcesso = int.Parse(Console.ReadLine());
+  }
+
+  // Console.Write("Nome do produto: ");
+  // string nomeProduto = Console.ReadLine();
+  // Console.Write("Categoria do produto: (0 - Mercado, 1 - Escritório, 2 Manutenção): ");
+  // string categoriaProduto = ValidaCategoriaProduto(Console.ReadLine());
+
+  // var produto = new Produto(nomeProduto, Enum.Parse<ProdutoCategoria>(categoriaProduto));
+  // listaEscolhida.AdicionarProduto(produto);
+
+  // string adicionarProduto = MenuAdicionarProduto();
+ 
+  // while (adicionarProduto != "N")
+  // {
+  //   Console.Write("Nome do produto: ");
+  //   nomeProduto = Console.ReadLine();
+  //   Console.Write("Categoria do produto: (0 - Mercado, 1 - Escritório, 2 Manutenção): ");
+  //   categoriaProduto = ValidaCategoriaProduto(Console.ReadLine());
+
+  //   produto = new Produto(nomeProduto, Enum.Parse<ProdutoCategoria>(categoriaProduto));
+  //   listaEscolhida.AdicionarProduto(produto);
+    
+  //   adicionarProduto = MenuAdicionarProduto();
+  // }
+  // OperacaoSalvarLista(listaEscolhida);
+  // OperacaoInicial();
+
+}
+
+void MostrarProdutos(ListaCompra listaCompra)
+{
+  Console.ForegroundColor = ConsoleColor.Green;
+  Console.WriteLine($"Lista: {listaCompra.Nome}");
+  Console.WriteLine($"Produtos");
+  Console.ForegroundColor = ConsoleColor.Yellow;
+  listaCompra.Produtos.ForEach(item =>
+  {
+    Console.WriteLine($"{item}");
+  });
+  Console.ForegroundColor = ConsoleColor.White;
 }
 
 void OperacaoObterListas()
@@ -227,11 +301,9 @@ void OperacaoObterListas()
       Console.WriteLine($"{i + 1}: {listas[i].Nome} - {listas[i].DataDesejadaDaCompra}");
     }
     Console.WriteLine();
-    OperacaoInicial();
   }
   Console.ForegroundColor = ConsoleColor.White;
 }
-
 
 string ValidaCategoriaProduto(string categoriaProduto)
 {

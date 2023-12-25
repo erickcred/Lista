@@ -1,0 +1,9 @@
+Nome Lista: Lista Jessica
+Data prevista compra: 10/10/2023 00:00:00
+Produtos
+----
+Produto1, categória: Mercado, R$ 0,00, comprado: Não
+Produto2, categória: Mercado, R$ 0,00, comprado: Não
+Produto3, categória: Mercado, R$ 0,00, comprado: Não
+----
+
